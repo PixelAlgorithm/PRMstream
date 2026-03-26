@@ -1,16 +1,26 @@
 import { useParams } from "react-router-dom";
+import './videoplayer.css'
+
 function VideoPlayer() {
     const { id } = useParams();
 
-    const src = `https://www.vidking.net/embed/movie/${id}`
+   // const src = `https://www.vidking.net/embed/movie/${id}`
+    const src = `https://player.videasy.net/movie/${id}`
 
-return(
+return (
 
-    <div className="player">
-        <iframe src={src} width="100%" height="600" frameBorder="0"
-                allowFullScreen>
+    // <div className="player">
+    //     <iframe src="https://www.vidking.net/embed/movie/1078605?color=e50914&autoPlay=true" width="100%" height="600"
+    //             frameBorder="0"
+    //             allowFullScreen></iframe>
+    // </div>
+    <div className={"player"}>
+        <iframe className={"video-player"}
+            src={src}
 
-        </iframe>
+            frameBorder="0"
+            allowFullScreen
+        ></iframe>
     </div>
 )
 }

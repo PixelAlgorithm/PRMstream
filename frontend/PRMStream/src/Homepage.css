@@ -1,10 +1,31 @@
 .Homepage {
-    padding: 1px;
-    display: flex;
+    padding: 0;
     background-color: #191717;
-    height: 100vh;
+    height: 100%;
     width: 100vw;
     border:2px solid black;
 }
 
+.Nav{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #7e4040;
+    width: 100%;
+    height: 15%;
+    margin: 0;
+    padding: 1px;
+    opacity: .85 ;
+    backdrop-filter: blur(5px);
 
+}
+
+
+.Videos{
+    display: flex;
+    flex-wrap: wrap;
+    gap:1px;
+    margin: 1px;
+    padding: 0;
+}
