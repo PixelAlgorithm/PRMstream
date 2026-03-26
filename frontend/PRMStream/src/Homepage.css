@@ -1,0 +1,10 @@
+.Homepage {
+    padding: 1px;
+    display: flex;
+    background-color: #191717;
+    height: 100vh;
+    width: 100vw;
+    border:2px solid black;
+}
+
+
