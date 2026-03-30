@@ -1,13 +1,16 @@
 body {
+    margin: 0;
     background-color: #191717;
 }
 
 .Homepage {
+
     padding: 0;
     background-color: #191717;
     height: 100%;
-    width: 100vw;
+    width: 100%;
     border:2px solid black;
+    align-items: center;
 }
 
 .Nav{

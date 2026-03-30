@@ -12,7 +12,7 @@ function App()
           <BrowserRouter>
               <Routes>
             <Route path="/" element={<Homepage />} />
-                  <Route path="/player/:id" element={<VideoPlayer />} />
+                  <Route path="/player/:type/:id/:season?/:episode?" element={<VideoPlayer />} />
               </Routes>
           </BrowserRouter>
       </>

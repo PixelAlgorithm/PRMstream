@@ -32,7 +32,8 @@ async function get_pop(){
 
 async function get_search_results(query){
     try {
-        const result = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=425462a0267631f586507ff67e977c17&query=${query}`)
+        //const result = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=425462a0267631f586507ff67e977c17&query=${query}`)
+        const result = await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=425462a0267631f586507ff67e977c17&query=${query}`)
         return result.data;
     }
     catch(err){
@@ -63,12 +64,23 @@ app.get('/popular',(req,res)=>{
     })
 })
 
-app.get('/search/:query',(req,res)=>{
-    const query = req.params.query;
+// app.get('/search/:query',(req,res)=>{
+//     const query = req.params.query;
+//     get_search_results(query).then(data=>{
+//         res.send(data)
+//     })
+// })
+
+
+app.get("/search", async (req, res) => {
+
+    const query = req.query.query;
+
     get_search_results(query).then(data=>{
-        res.send(data)
-    })
-})
+        res.json(data)
+    });
+
+});
 
 
 app.listen(port,()=>{

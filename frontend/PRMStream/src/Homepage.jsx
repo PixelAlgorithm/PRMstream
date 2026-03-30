@@ -17,6 +17,22 @@ function Homepage()
         popular_movies()
     },[])
 
+    useEffect(() => {
+        const delay = setTimeout(() => {
+
+            if (query === "") {
+                popular_movies();
+            } else {
+                search_movies();
+            }
+
+        }, 400);
+
+        return () => clearTimeout(delay);
+
+    }, [query]);
+
+
 
     async function popular_movies()
     {
@@ -25,10 +41,18 @@ function Homepage()
         const response = data.data.results
         setMovies(response)
     }
+
+    function get_movies(e){
+        setQuery(e.target.value);
+    }
+
     async function search_movies()
     {
         setMovies([]);
-        const data = await axios.get(`http://localhost:3000/search/${query}`)
+        const data = await axios.get(
+            `http://localhost:3000/search?query=${query}`
+        );
+
         if (data.data.total_results == 0){
             alert('Movie not found!')
             popular_movies();
@@ -40,15 +64,6 @@ function Homepage()
         setMovies(response)
     }
 
-    function get_movies(e){
-        const value = e.target.value;
-        setQuery(e.target.value)
-        if(value === ""){
-            popular_movies()
-        }else {
-            search_movies()
-        }
-    }
 
 
 
@@ -72,11 +87,10 @@ function Homepage()
                     ))
                 }
                 {/*<Video_card title={"Peaky Blinders: The Immortal Man"} poster={"gRMalasZEzsZi4w2VFuYusfSfqf.jpg"} backdrop={"1fkuBPid72KGS6WmtkEXMftZtkE.jpg"} id={"875828"} rating={"7.4"}/>*/}
-                {movies.map(movie=>(
-                    <Video_card key = {movie.id} title= {movie.title} poster={movie.poster_path} backdrop={movie.backdrop_path} id={movie.id}
-                                rating={movie.vote_average}/>
-
-                ))}
+                {movies.map(item => (
+                        <Video_card key={item.id} item={item} />
+                    ))
+                }
 
 
 

@@ -2,10 +2,19 @@ import { useParams } from "react-router-dom";
 import './videoplayer.css'
 
 function VideoPlayer() {
-    const { id } = useParams();
 
-   // const src = `https://www.vidking.net/embed/movie/${id}`
-    const src = `https://player.videasy.net/movie/${id}?overlay=true`
+    const { type, id, season, episode } = useParams();
+
+    let src;
+
+    if (type === "tv") {
+        const s = season || 1;
+        const e = episode || 1;
+
+        src = `https://player.videasy.net/tv/${id}/${s}/${e}?nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=8B5CF6`;
+    } else {
+        src = `https://player.videasy.net/movie/${id}`;
+    }
 
 return (
 
