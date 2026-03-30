@@ -48,21 +48,21 @@ body {
 
 
 .Videos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;              /* increase spacing */
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
     padding: 10px;
 }
 
-/* IMPORTANT: match your actual Video_card size */
 .skeleton-card {
-    width: 360px;
-    height: 250px;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     border-radius: 10px;
-    background: #2a2a2a;   /* fix white flash */
-    flex-shrink: 0;        /* prevents weird shrinking */
+    background: #2a2a2a;
+    overflow: hidden;
 }
-/* Shimmer effect */
+
 .skeleton-card::after {
     content: "";
     position: absolute;
@@ -82,5 +82,23 @@ body {
 @keyframes shimmer {
     100% {
         left: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .Videos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .Videos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .Videos {
+        grid-template-columns: 1fr;
     }
 }
