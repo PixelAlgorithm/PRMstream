@@ -2,7 +2,6 @@ import Video_card from "./video_card.jsx";
 import './Homepage.css'
 import axios from 'axios'
 import {useState,useEffect} from "react";
-import reactRefresh from "eslint-plugin-react-refresh";
 
 
 
@@ -71,10 +70,24 @@ function Homepage()
         <>
         <div className={"Homepage"}>
             <div className={"Nav"}>
-                <h1>Welcome to PRMstream</h1>
+                <div className="nav-inner">
+                    <div className="brand">
+                        <div className="brand-logo" aria-hidden="true"></div>
+                        <h1>PRMstream</h1>
+                    </div>
+                    <div className="nav-links">
+                        <a href="#">Home</a>
+                        <a href="#">Browse</a>
+                        <button type="button" aria-label="Search">⌕</button>
+                        <button type="button" aria-label="Account">◯</button>
+                    </div>
+                </div>
                 <div className={"search"}>
-                    <h3> search</h3>
-                    <input className={"query"} value ={query} onChange={
+                    <input
+                        className={"query"}
+                        placeholder="Search movies or series"
+                        value ={query}
+                        onChange={
                     (e)=>get_movies(e)}/>
 
                 </div>
