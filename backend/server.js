@@ -18,6 +18,54 @@ const api = "425462a0267631f586507ff67e977c17"
 
 
 const poster_url =`https://image.tmdb.org/t/p/w500/gRMalasZEzsZi4w2VFuYusfSfqf.jpg`
+const servers = [
+    { name: "VidKing", base: "https://www.vidking.net/embed" },
+    { name: "VideoEasy", base: "https://player.videasy.net" },
+    { name: "VSEmbed", base: "https://vsembed.ru/embed" },
+    { name: "VidLink", base: "https://vidlink.pro" }
+];
+
+const buildTvLink = (server, id, season, episode) => {
+    switch (server.name) {
+
+        case "VidKing":
+            return `${server.base}/tv/${id}/${season}/${episode}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
+
+        case "VideoEasy":
+            return `${server.base}/tv/${id}/${season}/${episode}?nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=e50914`;
+
+        case "VSEmbed":
+            return `${server.base}/tv/${id}/${season}/${episode}`;
+
+        case "VidLink":
+            return `${server.base}/tv/${id}/${season}/${episode}?primaryColor=e50914&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=jw&title=true&poster=true&autoplay=true&nextbutton=true`;
+
+        default:
+            return "";
+    }
+};
+
+
+const buildMovieLink = (server, id) => {
+    switch (server.name) {
+
+        case "VidKing":
+            return `${server.base}/movie/${id}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
+
+        case "VideoEasy":
+            return `${server.base}/movie/${id}?color=e50914`;
+
+        case "VSEmbed":
+            return `${server.base}/movie/${id}`;
+
+        case "VidLink":
+            return `${server.base}/movie/${id}?primaryColor=e50914&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=jw&title=true&poster=true`;
+
+        default:
+            return "";
+    }
+};
+
 
 async function get_pop(){
     try {
@@ -81,6 +129,29 @@ app.get("/search", async (req, res) => {
         res.json(data)
     });
 
+});
+
+app.get('/movie/:id', (req, res) => {
+    const { id } = req.params;
+
+    const result = servers.map((server, index) => ({
+        id: index + 1,
+        name: server.name,
+        link: buildMovieLink(server, id)
+    }));
+
+    res.json(result);
+});
+app.get('/tv/:show_id/:season/:episode', (req, res) => {
+    const { show_id, season, episode } = req.params;
+
+    const result = servers.map((server, index) => ({
+        id: index + 1,
+        name: server.name,
+        link: buildTvLink(server, show_id, season, episode)
+    }));
+
+    res.json(result);
 });
 
 
