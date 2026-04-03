@@ -10,6 +10,7 @@ const axios = require('axios');
 const app = express();
 app.use(cors());
 const port = 3000
+const host = '0.0.0.0'
 
 
 const base_url = `https://api.themoviedb.org/3/`
@@ -83,8 +84,8 @@ app.get("/search", async (req, res) => {
 });
 
 
-app.listen(port,()=>{
+app.listen(port, host, ()=>{
     console.log("Server started");
-    console.log(`http://localhost:${port}`);
+    console.log(`http://${host}:${port}`);
 }
 )

@@ -3,6 +3,7 @@ import './Homepage.css'
 import axios from 'axios'
 import {useState,useEffect} from "react";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${window.location.protocol}//${window.location.hostname}:3000`;
 
 
 
@@ -35,10 +36,14 @@ function Homepage()
 
     async function popular_movies()
     {
-        setMovies([]);
-        const data = await axios.get(`http://localhost:3000/popular`)
-        const response = data.data.results
-        setMovies(response)
+        try {
+            setMovies([]);
+            const data = await axios.get(`${API_BASE_URL}/popular`)
+            const response = data.data.results
+            setMovies(response)
+        } catch (err) {
+            console.error('Failed to load popular movies:', err);
+        }
     }
 
     function get_movies(e){
@@ -47,20 +52,24 @@ function Homepage()
 
     async function search_movies()
     {
-        setMovies([]);
-        const data = await axios.get(
-            `http://localhost:3000/search?query=${query}`
-        );
+        try {
+            setMovies([]);
+            const data = await axios.get(
+                `${API_BASE_URL}/search?query=${encodeURIComponent(query)}`
+            );
 
-        if (data.data.total_results == 0){
-            alert('Movie not found!')
-            popular_movies();
-            setQuery("");
-            return;
+            if (data.data.total_results == 0){
+                alert('Movie not found!')
+                popular_movies();
+                setQuery("");
+                return;
+            }
+
+            const response = data.data.results
+            setMovies(response)
+        } catch (err) {
+            console.error('Failed to search movies:', err);
         }
-
-        const response = data.data.results
-        setMovies(response)
     }
 
 
