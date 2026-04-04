@@ -1,6 +1,7 @@
 .video_card {
     position: relative;
-    width: 100%;
+    width: auto;
+    min-width: 250px;
     aspect-ratio: 16 / 9;
     border-radius: 10px;
     overflow: hidden;
@@ -20,7 +21,13 @@
     display: block;
 }
 
+.video_card {
+    transition: transform 0.25s ease;
+}
 
+.video_card:hover {
+    transform: scale(1.05);
+}
 .details {
     position: absolute;
     bottom: 0;
@@ -39,3 +46,4 @@
     opacity: 1;
     transform: translateY(0);
 }
+

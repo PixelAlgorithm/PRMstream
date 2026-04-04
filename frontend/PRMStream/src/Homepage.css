@@ -1,185 +1,137 @@
-body {
-    margin: 0;
-    background-color: #191717;
-}
-
+/* 🌑 BASE */
 .Homepage {
-    padding: 0;
-    background-color: #191717;
-    height: 100%;
-    width: 100%;
-    align-items: center;
+    background: #0b0b0b;
+    min-height: 100vh;
 }
 
-.Nav{
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    background: linear-gradient(90deg, rgba(36, 4, 8, 0.98), rgba(97, 8, 18, 0.95) 45%, rgba(145, 18, 32, 0.92));
-    width: 100%;
-    margin: 0;
-    padding: 10px 18px 12px;
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 182, 182, 0.18);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.38);
-}
-
-.nav-inner {
+/* 🎬 HERO */
+.hero {
+    height: 75vh;
+    background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    min-width: 0;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.brand h1 {
-    margin: 0;
-    font-size: clamp(24px, 2.5vw, 42px);
-    color: #ffffff;
-    letter-spacing: 0.3px;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-}
-
-/* Optional logo slot: set display:block to show */
-.brand-logo {
-    display: none;
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #ff5b2e, #b10314);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-shrink: 0;
-    padding-right: 4px;
-}
-
-.nav-links a,
-.nav-links button {
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: clamp(14px, 1.2vw, 22px);
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.nav-links a:hover,
-.nav-links button:hover {
-    color: #ffffff;
-    transform: translateY(-1px);
-}
-
-.search{
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 170, 170, 0.3);
-    border-radius: 12px;
-    background: linear-gradient(90deg, rgba(28, 4, 8, 0.62), rgba(55, 9, 16, 0.45));
-    box-shadow: inset 0 1px 0 rgba(255, 214, 214, 0.1);
-    outline: none;
-}
-
-.query{
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 196, 196, 0.24);
-    border-radius: 10px;
-    padding: 10px 12px;
-    outline: none;
-    flex: 1;
-    font-size: 16px;
-    color: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.query:focus {
-    border-color: rgba(255, 152, 152, 0.75);
-    background: rgba(255, 255, 255, 0.11);
-    box-shadow: 0 0 0 3px rgba(255, 110, 110, 0.2);
-}
-
-
-.Videos {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    padding: 10px;
-}
-
-.skeleton-card {
+    padding: 40px;
     position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 10px;
-    background: #2a2a2a;
-    overflow: hidden;
 }
 
-.skeleton-card::after {
+.hero::before {
     content: "";
     position: absolute;
-    top: 19%;
-    left: -150px;
-    height: 100%;
-    width: 150px;
-    background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,0.2),
-            transparent
-    );
-    animation: shimmer 1.2s infinite;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.9), transparent);
 }
 
-@keyframes shimmer {
-    100% {
-        left: 100%;
-    }
+.hero::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, #0b0b0b);
 }
 
-@media (max-width: 1200px) {
-    .Videos {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+.hero-overlay {
+    position: relative;
+    max-width: 600px;
 }
 
-@media (max-width: 900px) {
-    .nav-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .nav-links {
-        gap: 16px;
-    }
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
 }
 
-@media (max-width: 900px) {
-    .Videos {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+.hero-desc {
+    color: #ccc;
+    margin-bottom: 20px;
 }
 
-@media (max-width: 560px) {
-    .Videos {
-        grid-template-columns: 1fr;
-    }
+/* 🎬 BUTTONS */
+.hero-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.watch-btn {
+    background: #e50914;
+    border: none;
+    padding: 12px 28px;
+
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+
+    border-radius: 6px;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+.hero-buttons {
+    margin-top: 10px;
+}
+
+.watch-btn:hover {
+    background: #b20710;
+    transform: scale(1.05);
+}
+
+/* 🔥 SECTION */
+.section-title {
+    margin: 25px 20px 10px;
+    font-size: 22px;
+    border-left: 4px solid #e50914;
+    padding-left: 10px;
+}
+
+/* 🔥 ROW WRAPPER */
+.row-wrapper {
+    position: relative;
+}
+
+/* 🔥 ROW */
+.popular-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 10px 40px;
+    scroll-behavior: smooth;
+}
+
+.popular-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* FIX CARD SIZE */
+.popular-row .video_card {
+    min-width: 250px;
+    max-width: 250px;
+    flex: 0 0 auto;
+}
+
+/* ⬅️➡️ BUTTONS */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: white;
+
+    font-size: 30px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.scroll-btn.left {
+    left: 0;
+}
+
+.scroll-btn.right {
+    right: 0;
+}
+
+.scroll-btn:hover {
+    background: rgba(0,0,0,0.9);
 }

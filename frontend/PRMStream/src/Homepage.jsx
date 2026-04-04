@@ -1,128 +1,132 @@
 import Video_card from "./video_card.jsx";
+import ContinueWatching from "./ContinueWatching.jsx";
 import './Homepage.css'
 import axios from 'axios'
-import {useState,useEffect} from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${window.location.protocol}//${window.location.hostname}:3000`;
+const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ||
+    `${window.location.protocol}//${window.location.hostname}:3000`;
 
+function Homepage() {
+    const navigate = useNavigate();
 
+    const [heroList, setHeroList] = useState([]);
+    const [heroIndex, setHeroIndex] = useState(0);
+    const [popular, setPopular] = useState([]);
+    const [topRated, setTopRated] = useState([]);
+    const [actionMovies, setActionMovies] = useState([]);
 
-
-function Homepage()
-{
-    const [movies, setMovies] = useState([]);
-    const [query, setQuery] = useState("");
-
-    useEffect(()=> {
-        popular_movies()
-    },[])
+    const continueRef = useRef();
+    const popularRef = useRef();
+    const topRatedRef = useRef();
+    const actionRef = useRef();
 
     useEffect(() => {
-        const delay = setTimeout(() => {
+        const load = async () => {
+            try {
+                const [popRes, topRes, actionRes] = await Promise.all([
+                    axios.get(`${API_BASE_URL}/popular`),
+                    axios.get(`${API_BASE_URL}/discover/movie?sort_by=vote_average.desc&vote_count.gte=1000`),
+                    axios.get(`${API_BASE_URL}/discover/movie/genre/28`)
+                ]);
 
-            if (query === "") {
-                popular_movies();
-            } else {
-                search_movies();
+                const popData = popRes.data.results;
+
+                setHeroList(popData.slice(0, 5));
+                setPopular(popData.slice(5));
+                setTopRated(topRes.data.results);
+                setActionMovies(actionRes.data.results);
+            } catch (err) {
+                console.error(err);
             }
+        };
 
-        }, 400);
+        load();
+    }, []);
 
-        return () => clearTimeout(delay);
+    useEffect(() => {
+        if (heroList.length === 0) return;
 
-    }, [query]);
+        const interval = setInterval(() => {
+            setHeroIndex(prev => (prev + 1) % heroList.length);
+        }, 4000);
 
+        return () => clearInterval(interval);
+    }, [heroList]);
 
+    const hero = heroList[heroIndex];
 
-    async function popular_movies()
-    {
-        try {
-            setMovies([]);
-            const data = await axios.get(`${API_BASE_URL}/popular`)
-            const response = data.data.results
-            setMovies(response)
-        } catch (err) {
-            console.error('Failed to load popular movies:', err);
-        }
-    }
+    const scroll = (ref, dir) => {
+        const width = ref.current.clientWidth;
+        ref.current.scrollBy({
+            left: dir === "left" ? -width : width,
+            behavior: "smooth"
+        });
+    };
 
-    function get_movies(e){
-        setQuery(e.target.value);
-    }
+    return (
+        <div className="Homepage">
 
-    async function search_movies()
-    {
-        try {
-            setMovies([]);
-            const data = await axios.get(
-                `${API_BASE_URL}/search?query=${encodeURIComponent(query)}`
-            );
-
-            if (data.data.total_results == 0){
-                alert('Movie not found!')
-                popular_movies();
-                setQuery("");
-                return;
-            }
-
-            const response = data.data.results
-            setMovies(response)
-        } catch (err) {
-            console.error('Failed to search movies:', err);
-        }
-    }
-
-
-
-
-    return(
-        <>
-        <div className={"Homepage"}>
-            <div className={"Nav"}>
-                <div className="nav-inner">
-                    <div className="brand">
-                        <div className="brand-logo" aria-hidden="true"></div>
-                        <h1>PRMstream</h1>
-                    </div>
-                    <div className="nav-links">
-                        <a href="#">Home</a>
-                        <a href="#">Browse</a>
-                        <button type="button" aria-label="Search">⌕</button>
-                        <button type="button" aria-label="Account">◯</button>
+            {hero && (
+                <div
+                    className="hero"
+                    style={{
+                        backgroundImage: `url(https://image.tmdb.org/t/p/original${hero.backdrop_path})`
+                    }}
+                >
+                    <div className="hero-overlay">
+                        <h1>{hero.title || hero.name}</h1>
+                        <p className="hero-desc">{hero.overview?.slice(0, 140)}...</p>
+                        <button
+                            className="watch-btn"
+                            onClick={() =>
+                                navigate(`/player/${hero.media_type || "movie"}/${hero.id}`)
+                            }
+                        >
+                            ▶ Watch Now
+                        </button>
                     </div>
                 </div>
-                <div className={"search"}>
-                    <input
-                        className={"query"}
-                        placeholder="Search movies or series"
-                        value ={query}
-                        onChange={
-                    (e)=>get_movies(e)}/>
+            )}
 
-                </div>
+            <h2 className="section-title">Continue Watching</h2>
+            <div className="row-wrapper">
+                <button onClick={() => scroll(continueRef, "left")} className="scroll-btn left">‹</button>
+                <ContinueWatching rowRef={continueRef} />
+                <button onClick={() => scroll(continueRef, "right")} className="scroll-btn right">›</button>
             </div>
 
-            <div className="Videos">
-                {movies.length === 0 &&
-                    Array(20).fill(0).map((_, i) => (
-                        <div className="video-card skeleton-card" key={i}></div>
-                    ))
-                }
-                {/*<Video_card title={"Peaky Blinders: The Immortal Man"} poster={"gRMalasZEzsZi4w2VFuYusfSfqf.jpg"} backdrop={"1fkuBPid72KGS6WmtkEXMftZtkE.jpg"} id={"875828"} rating={"7.4"}/>*/}
-                {movies.map(item => (
-                        <Video_card key={item.id} item={item} />
-                    ))
-                }
+            <h2 className="section-title">Popular</h2>
+            <div className="row-wrapper">
+                <button onClick={() => scroll(popularRef, "left")} className="scroll-btn left">‹</button>
+                <div className="popular-row" ref={popularRef}>
+                    {popular.map(item => <Video_card key={item.id} item={item} />)}
+                </div>
+                <button onClick={() => scroll(popularRef, "right")} className="scroll-btn right">›</button>
+            </div>
 
+            <h2 className="section-title">Top Rated</h2>
+            <div className="row-wrapper">
+                <button onClick={() => scroll(topRatedRef, "left")} className="scroll-btn left">‹</button>
+                <div className="popular-row" ref={topRatedRef}>
+                    {topRated.map(item => <Video_card key={item.id} item={item} />)}
+                </div>
+                <button onClick={() => scroll(topRatedRef, "right")} className="scroll-btn right">›</button>
+            </div>
 
-
+            <h2 className="section-title">Action</h2>
+            <div className="row-wrapper">
+                <button onClick={() => scroll(actionRef, "left")} className="scroll-btn left">‹</button>
+                <div className="popular-row" ref={actionRef}>
+                    {actionMovies.map(item => <Video_card key={item.id} item={item} />)}
+                </div>
+                <button onClick={() => scroll(actionRef, "right")} className="scroll-btn right">›</button>
             </div>
 
         </div>
-
-        </>
-
-    )
+    );
 }
 
 export default Homepage;

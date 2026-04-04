@@ -1,8 +1,10 @@
 .player {
+    background: #0b0b0b;
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin: 20px;
+
 }
 
 /* 🎬 Player */
@@ -48,4 +50,33 @@
 
 .server-buttons button.active {
     background: #e50914; /* Netflix red */
+}
+.controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.movie-info {
+    max-width: 65%;
+    color: white;
+}
+
+.meta {
+    color: #e50914;
+    margin-top: 8px;
+}
+
+.dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdowns select {
+    padding: 8px;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    border: none;
 }

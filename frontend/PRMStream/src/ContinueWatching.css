@@ -1,0 +1,66 @@
+.continue-section {
+    margin: 20px;
+}
+
+.continue-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0;
+    scrollbar-width: none; /* Firefox */
+}
+
+.continue-row::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.continue-row::-webkit-scrollbar {
+    height: 6px;
+}
+
+
+.continue-card {
+    min-width: 250px;
+    max-width: 250px;
+    flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #333;
+    z-index: 5;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #e50914;
+}
+
+.details {
+    z-index: 10;
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #333;
+    z-index: 5;   /* ✅ ensures it's above image */
+}
+.progress-fill {
+    height: 100%;
+    background: #e5091;
+}
+
+.details {
+    z-index: 10;   /* above progress */
+}
