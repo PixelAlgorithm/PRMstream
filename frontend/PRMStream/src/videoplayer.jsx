@@ -21,14 +21,16 @@ function VideoPlayer() {
     const [selectedSeason, setSelectedSeason] = useState(season || 1);
     const [selectedEpisode, setSelectedEpisode] = useState(episode || 1);
 
+    /* =========================
+       SAVE PROGRESS
+    ========================= */
     const saveProgress = async (payload) => {
-        if (!payload.media_id) return;
         try {
             const { data: userData } = await supabase.auth.getUser();
             const user = userData.user;
             if (!user) return;
 
-            const { error } = await supabase.from("progress").upsert({
+            await supabase.from("progress").upsert({
                 user_id: user.id,
                 media_id: payload.media_id,
                 type: payload.type,
@@ -36,59 +38,71 @@ function VideoPlayer() {
                 episode: payload.episode,
                 progress: payload.progress,
                 updated_at: new Date()
-            },  {
-                onConflict: 'user_id,media_id',
-                ignoreDuplicates: false});
+            }, {
+                onConflict: "user_id,media_id"
+            });
 
-            if (error) console.log("Supabase error:", error);
         } catch (err) {
-            console.log("Save crash:", err);
+            console.log("Save error:", err);
         }
     };
 
+    /* =========================
+       PLAYER EVENTS (ALL SERVERS)
+    ========================= */
     useEffect(() => {
         let lastSave = 0;
+
         const handler = async (event) => {
             try {
                 let data;
 
+                // VidKing / VidEasy (string)
                 if (typeof event.data === "string") {
-                    const raw = JSON.parse(event.data);
-                    data = raw.data || raw;
-                } else if (event.data?.type === "PLAYER_EVENT") {
+                    try {
+                        const parsed = JSON.parse(event.data);
+                        if (parsed?.type === "PLAYER_EVENT") {
+                            data = parsed.data;
+                        }
+                    } catch {
+                        return;
+                    }
+                }
+
+                // VidLink (object)
+                else if (event.data?.type === "PLAYER_EVENT") {
                     data = event.data.data;
                 }
 
                 if (!data) return;
-                if (!data.currentTime && !data.progress) return;
+                if (!data.currentTime || !data.duration) return;
 
-                const payload = {
-                    media_id: data.id || data.tmdbId,
-                    type: data.mediaType || data.type,
-                    season: data.season ?? null,
-                    episode: data.episode ?? null,
-                    progress: data.progress ??
-                        (data.currentTime && data.duration
-                            ? (data.currentTime / data.duration) * 100
-                            : 0),
-                };
-
-                if (!payload.media_id) return;
+                const progress =
+                    data.progress ??
+                    (data.currentTime / data.duration) * 100;
 
                 if (Date.now() - lastSave < 5000) return;
                 lastSave = Date.now();
 
-                saveProgress(payload);
+                saveProgress({
+                    media_id: data.id || data.tmdbId || id,
+                    type: data.mediaType || data.type || type,
+                    season: data.season ?? selectedSeason ?? null,
+                    episode: data.episode ?? selectedEpisode ?? null,
+                    progress
+                });
 
-            } catch (err) {
-                // ignore bad messages
-            }
+            } catch {}
         };
 
         window.addEventListener("message", handler);
         return () => window.removeEventListener("message", handler);
-    }, []);
 
+    }, [id, type, selectedSeason, selectedEpisode]);
+
+    /* =========================
+       FETCH SOURCES
+    ========================= */
     useEffect(() => {
         const fetchSources = async () => {
             try {
@@ -102,9 +116,12 @@ function VideoPlayer() {
                 setServers(data.servers);
                 setDetails(data);
 
-                if (data.servers?.length > 0) {
-                    setSrc(data.servers[0].link);
-                }
+                // ✅ Default = VidKing
+                const vidking = data.servers.find(s => s.name === "VidKing");
+                const defaultServer = vidking || data.servers[0];
+
+                setSrc(defaultServer?.link || "");
+
             } catch (err) {
                 console.error(err);
             }
@@ -113,10 +130,9 @@ function VideoPlayer() {
         fetchSources();
     }, [type, id, selectedSeason, selectedEpisode]);
 
-    const handleEpisodeChange = (ep) => {
-        setSelectedEpisode(ep);
-    };
-
+    /* =========================
+       UI
+    ========================= */
     return (
         <div className="player">
 
@@ -125,12 +141,15 @@ function VideoPlayer() {
             </button>
 
             <iframe
+                key={src}
                 className="video-player"
                 src={src}
                 frameBorder="0"
+                allow="autoplay; fullscreen"
                 allowFullScreen
             ></iframe>
 
+            {/* 🔌 SERVERS */}
             <div className="server-buttons">
                 {servers.map((server) => (
                     <button
@@ -144,6 +163,8 @@ function VideoPlayer() {
             </div>
 
             <div className="controls">
+
+                {/* 🎬 INFO */}
                 {details && (
                     <div className="movie-info">
                         <h2>{details.info.title}</h2>
@@ -152,7 +173,9 @@ function VideoPlayer() {
                     </div>
                 )}
 
+                {/* 🎬 SELECTORS */}
                 <div className="dropdowns">
+
                     {details?.seasons && (
                         <select
                             value={selectedSeason}
@@ -171,7 +194,7 @@ function VideoPlayer() {
                     {details?.episodes && (
                         <select
                             value={selectedEpisode}
-                            onChange={(e) => handleEpisodeChange(e.target.value)}
+                            onChange={(e) => setSelectedEpisode(e.target.value)}
                         >
                             {details.episodes.map((ep) => (
                                 <option key={ep.id} value={ep.episode_number}>
@@ -180,6 +203,7 @@ function VideoPlayer() {
                             ))}
                         </select>
                     )}
+
                 </div>
             </div>
 
