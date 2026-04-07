@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cors = require("cors");
 const express = require('express');
 const axios = require('axios');
@@ -5,11 +6,11 @@ const axios = require('axios');
 const app = express();
 app.use(cors());
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const host = '0.0.0.0';
 
 const base_url = `https://api.themoviedb.org/3`;
-const api = "425462a0267631f586507ff67e977c17";
+const api = process.env.TMDB_API_KEY;
 
 const servers = [
     { name: "VidKing", base: "https://www.vidking.net/embed" },
@@ -195,6 +196,53 @@ app.get("/discover/movie", async (req, res) => {
     }
 });
 
+app.get("/trending/movie", async (req, res) => {
+    try {
+        const response = await axios.get(`${base_url}/trending/movie/day`, {
+            params: { api_key: api }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: "Trending movies failed" });
+    }
+});
+
+app.get("/trending/tv", async (req, res) => {
+    try {
+        const response = await axios.get(`${base_url}/trending/tv/day`, {
+            params: { api_key: api }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: "Trending TV failed" });
+    }
+});
+
+app.get("/top-rated/tv", async (req, res) => {
+    try {
+        const response = await axios.get(`${base_url}/discover/tv`, {
+            params: {
+                api_key: api,
+                sort_by: "vote_average.desc",
+                vote_count_gte: 1000
+            }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: "Top rated TV failed" });
+    }
+});
+app.get("/discover/all", async (req, res) => {
+    try {
+        const response = await axios.get(`${base_url}/trending/all/day`, {
+            params: { api_key: api }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: "Discover all failed" });
+    }
+});
+
 app.get("/discover/tv", async (req, res) => {
     try {
         const response = await axios.get(`${base_url}/discover/tv`, {
@@ -227,7 +275,20 @@ app.get("/discover/movie/genre/:id", async (req, res) => {
         res.status(500).json({ error: "Movie genre failed" });
     }
 });
-
+app.get("/discover/tv/genre/:id", async (req, res) => {
+    try {
+        const response = await axios.get(`${base_url}/discover/tv`, {
+            params: {
+                api_key: api,
+                with_genres: req.params.id,
+                sort_by: "popularity.desc"
+            }
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: "TV genre failed" });
+    }
+});
 app.get("/top-rated", async (req, res) => {
     try {
         const response = await axios.get(`${base_url}/discover/movie`, {

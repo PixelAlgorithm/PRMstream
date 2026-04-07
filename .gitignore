@@ -1,0 +1,16 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment secrets — NEVER commit these
+.env
+backend/.env
+frontend/PRMStream/.env
+
+# OS
+.DS_Store
+.idea/
+
+# Build outputs
+dist/
+dist-ssr/

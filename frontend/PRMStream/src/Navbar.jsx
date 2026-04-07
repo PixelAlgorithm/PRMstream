@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
+const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ||
+    `${window.location.protocol}//${window.location.hostname}:3000`;
+
 function Navbar() {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
@@ -20,7 +24,7 @@ function Navbar() {
 
         try {
             const res = await fetch(
-                `http://localhost:3000/search?query=${encodeURIComponent(value)}`
+                `${API_BASE_URL}/search?query=${encodeURIComponent(value)}`
             );
             const data = await res.json();
 

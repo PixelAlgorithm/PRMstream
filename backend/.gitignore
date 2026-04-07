@@ -1,0 +1,9 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment secrets — NEVER commit these
+.env
+
+# OS
+.DS_Store
