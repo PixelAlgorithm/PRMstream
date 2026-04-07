@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
-import "./auth.css";
+import "./Auth.css";
 
 function Auth() {
     const [user, setUser] = useState(null);
