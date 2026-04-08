@@ -9,7 +9,6 @@
     padding-left: 10px;
 }
 
-/* PROFILE CARD */
 .profile-card {
     background: linear-gradient(to right, #1c1c1c, #111);
     border-radius: 12px;
@@ -28,7 +27,6 @@
     color: #ddd;
 }
 
-/* LOGOUT BUTTON */
 .logout-btn {
     background: #e50914;
     border: none;

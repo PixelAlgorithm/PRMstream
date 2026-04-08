@@ -109,7 +109,6 @@ function Homepage() {
     return (
         <div className="Homepage">
 
-            {/* 🎬 HERO */}
             {hero && (
                 <div
                     className="hero"
@@ -135,7 +134,6 @@ function Homepage() {
                 </div>
             )}
 
-            {/* 🔥 CONTINUE */}
             <h2 className="section-title">Continue Watching</h2>
             <div className="row-wrapper">
                 <button onClick={() => scroll(continueRef, "left")} className="scroll-btn left">‹</button>
@@ -143,7 +141,6 @@ function Homepage() {
                 <button onClick={() => scroll(continueRef, "right")} className="scroll-btn right">›</button>
             </div>
 
-            {/* 🎬 ROWS */}
             <Row title="Popular" data={popular} refObj={popularRef} />
             <Row title="Top Rated" data={topRated} refObj={topRatedRef} />
             <Row title="Action" data={actionMovies} refObj={actionRef} />

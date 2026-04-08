@@ -1,10 +1,8 @@
-/* 🌑 BASE */
 .Homepage {
     background: #0b0b0b;
     min-height: 100vh;
 }
 
-/* 🎬 HERO */
 .hero {
     height: 75vh;
     background-size: cover;
@@ -19,7 +17,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.9), transparent);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.9), transparent);
 }
 
 .hero::after {
@@ -46,7 +44,6 @@
     margin-bottom: 20px;
 }
 
-/* 🎬 BUTTONS */
 .hero-buttons {
     display: flex;
     gap: 10px;
@@ -66,6 +63,7 @@
 
     transition: all 0.2s ease;
 }
+
 .hero-buttons {
     margin-top: 10px;
 }
@@ -75,7 +73,6 @@
     transform: scale(1.05);
 }
 
-/* 🔥 SECTION */
 .section-title {
     margin: 25px 20px 10px;
     font-size: 22px;
@@ -83,12 +80,10 @@
     padding-left: 10px;
 }
 
-/* 🔥 ROW WRAPPER */
 .row-wrapper {
     position: relative;
 }
 
-/* 🔥 ROW */
 .popular-row {
     display: flex;
     gap: 16px;
@@ -101,21 +96,19 @@
     display: none;
 }
 
-/* FIX CARD SIZE */
 .popular-row .video_card {
     min-width: 250px;
     max-width: 250px;
     flex: 0 0 auto;
 }
 
-/* ⬅️➡️ BUTTONS */
 .scroll-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 5;
 
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     border: none;
     color: white;
 
@@ -133,5 +126,5 @@
 }
 
 .scroll-btn:hover {
-    background: rgba(0,0,0,0.9);
+    background: rgba(0, 0, 0, 0.9);
 }

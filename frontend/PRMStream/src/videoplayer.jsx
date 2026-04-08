@@ -20,7 +20,6 @@ function VideoPlayer() {
     const [selectedSeason, setSelectedSeason] = useState(season || 1);
     const [selectedEpisode, setSelectedEpisode] = useState(episode || 1);
 
-    // 🔥 Save progress
     const saveProgress = async (payload) => {
         if (!payload.media_id) return;
 
@@ -42,7 +41,6 @@ function VideoPlayer() {
         );
     };
 
-    // 🔥 Listen to player events (ALL servers)
     useEffect(() => {
         let lastSave = 0;
 
@@ -50,13 +48,11 @@ function VideoPlayer() {
             try {
                 let data;
 
-                // ✅ VidKing / VideoEasy (string JSON)
                 if (typeof event.data === "string") {
                     data = JSON.parse(event.data);
                     data = data.data || data;
                 }
 
-                // ✅ VidLink
                 else if (event.data?.type === "PLAYER_EVENT") {
                     data = event.data.data;
                 }
@@ -77,14 +73,12 @@ function VideoPlayer() {
 
                 if (!payload.media_id) return;
 
-                // ⏱ throttle
                 if (Date.now() - lastSave < 5000) return;
                 lastSave = Date.now();
 
                 saveProgress(payload);
 
             } catch (err) {
-                // ignore
             }
         };
 
@@ -92,7 +86,6 @@ function VideoPlayer() {
         return () => window.removeEventListener("message", handler);
     }, []);
 
-    // 🔥 Fetch data
     useEffect(() => {
         const fetchSources = async () => {
             try {
@@ -107,7 +100,6 @@ function VideoPlayer() {
                 setServers(data.servers || []);
                 setDetails(data);
 
-                // ✅ default = VidKing (first server)
                 if (data.servers?.length > 0) {
                     setSrc(data.servers[0].link);
                 }
@@ -127,7 +119,6 @@ function VideoPlayer() {
                 ← Back
             </button>
 
-            {/* ✅ SAFE iframe */}
             {src && (
                 <iframe
                     key={src + selectedEpisode + selectedSeason}
@@ -140,7 +131,6 @@ function VideoPlayer() {
                 />
             )}
 
-            {/* 🔥 Servers */}
             <div className="server-buttons">
                 {servers.map((server) => (
                     <button
@@ -153,7 +143,6 @@ function VideoPlayer() {
                 ))}
             </div>
 
-            {/* 🔥 Info */}
             {details && (
                 <div className="controls">
 
@@ -163,7 +152,6 @@ function VideoPlayer() {
                         <p className="meta">⭐ {details.info.rating}</p>
                     </div>
 
-                    {/* 🎬 TV controls */}
                     <div className="dropdowns">
                         {details?.seasons && (
                             <select
